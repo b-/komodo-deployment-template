@@ -1,0 +1,23 @@
+[[resource_sync]]
+name = "template_stacks"
+tags = ["template", "sync"]
+[resource_sync.config]
+repo = "b-/template-deploy"
+git_account = "b-"
+resource_path = ["instances.toml"]
+managed = true
+delete = true
+match_tags = ["template", "instance"]
+
+##
+
+[[resource_sync]]
+name = "template_syncs"
+tags = ["template", "sync"]
+[resource_sync.config]
+repo = "b-/template-deploy"
+git_account = "b-"
+resource_path = ["syncs.toml"]
+managed = true
+delete = true
+match_tags = ["template", "sync"]

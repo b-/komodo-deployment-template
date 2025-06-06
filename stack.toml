@@ -1,0 +1,43 @@
+[[server]]
+name = "template-server"
+tags = ["template", "instance"]
+[server.config]
+address = "https://template.shark-perch.ts.net:8120"
+region = "pve1:vm/5353"
+enabled = true
+
+##
+
+[[stack]]
+name = "template_1"
+tags = ["template", "instance"]
+[stack.config]
+server = "template-server"
+git_account = "b-"
+repo = "b-/template-deploy"
+reclone = true
+file_paths = ["compose.yaml", "ts.yaml"]
+environment = """
+#TS_AUTHKEY=[[OP__KOMODO__TS_AUTHKEY_MY_APP__CREDENTIAL]]?ephemeral=true
+"""
+
+##
+
+[[procedure]]
+name = "deploy_template"
+tags = ["template", "instance"]
+
+[[procedure.config.stage]]
+name = "Sync 🔄"
+enabled = true
+executions = [
+  { execution.type = "RunSync", execution.params.sync = "template_syncs", enabled = true },
+  { execution.type = "RunSync", execution.params.sync = "template_stacks", enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "Deploy 🚀"
+enabled = true
+executions = [
+  { execution.type = "BatchDeployStackIfChanged", execution.params.pattern = "template_*", enabled = true }
+]
