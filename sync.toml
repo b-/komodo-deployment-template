@@ -1,0 +1,23 @@
+[[resource_sync]]
+name = "dns-a2cname_stacks"
+tags = ["dns-a2cname", "sync"]
+[resource_sync.config]
+repo = "b-/dns-a2cname-deploy"
+git_account = "b-"
+resource_path = ["instances.toml"]
+managed = true
+delete = true
+match_tags = ["dns-a2cname", "instance"]
+
+##
+
+[[resource_sync]]
+name = "dns-a2cname_syncs"
+tags = ["dns-a2cname", "sync"]
+[resource_sync.config]
+repo = "b-/dns-a2cname-deploy"
+git_account = "b-"
+resource_path = ["syncs.toml"]
+managed = true
+delete = true
+match_tags = ["dns-a2cname", "sync"]

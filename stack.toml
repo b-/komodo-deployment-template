@@ -1,0 +1,43 @@
+[[server]]
+name = "my-app-server"
+tags = ["my-app", "instance"]
+[server.config]
+address = "https://my-app.shark-perch.ts.net:8120"
+region = "pve1:vm/5353"
+enabled = true
+
+##
+
+[[stack]]
+name = "my-app_1"
+tags = ["my-app", "instance"]
+[stack.config]
+server = "my-app-server"
+git_account = "b-"
+repo = "b-/my-app-deploy"
+reclone = true
+file_paths = ["compose.yaml", "ts.yaml"]
+environment = """
+#TS_AUTHKEY=[[OP__KOMODO__TS_AUTHKEY_MY_APP__CREDENTIAL]]?ephemeral=true
+"""
+
+##
+
+[[procedure]]
+name = "deploy_my-app"
+tags = ["my-app", "instance"]
+
+[[procedure.config.stage]]
+name = "Sync 🔄"
+enabled = true
+executions = [
+  { execution.type = "RunSync", execution.params.sync = "my-app_syncs", enabled = true },
+  { execution.type = "RunSync", execution.params.sync = "my-app_stacks", enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "Deploy 🚀"
+enabled = true
+executions = [
+  { execution.type = "BatchDeployStackIfChanged", execution.params.pattern = "my-app_*", enabled = true }
+]
